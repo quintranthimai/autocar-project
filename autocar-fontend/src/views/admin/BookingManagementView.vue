@@ -55,6 +55,7 @@
             <div class="card border-0 shadow-sm rounded-4" style="overflow: visible !important;">
                 <div class="card-body p-0">
                     <div class="w-100" style="overflow: visible !important;">
+                    <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0 text-center">
                             <thead class="bg-light text-muted small text-uppercase">
                                 <tr>
@@ -153,6 +154,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
                     </div>
                 </div>
 

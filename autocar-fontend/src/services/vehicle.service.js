@@ -103,6 +103,16 @@ class VehicleService {
     restoreFromMaintenance(id) {
         return axios.post(`${API_URL}/${id}/restore`, {}, getAuthHeader());
     }
+
+    /**
+     * Thống kê doanh thu và số chuyến đi cho Bảng điều khiển của Chủ xe
+     */
+    getOwnerStats(year, month) {
+        return axios.get(`${BASE_URL}/partner/dashboard-stats`, {
+            ...getAuthHeader(),
+            params: { year, month }
+        });
+    }
 }
 
 // ============================================================================

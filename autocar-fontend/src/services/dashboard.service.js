@@ -34,6 +34,14 @@ class DashboardService {
             responseType: 'blob' // Trả về dạng file blob (binary)
         });
     }
+
+    /**
+     * Lấy dữ liệu thống kê chi tiết theo từng loại xe
+     * @param {number} year Năm cần xuất báo cáo
+     */
+    async getVehicleStats(year = new Date().getFullYear()) {
+        return await apiClient.get(`/v1/admin/dashboard/vehicle-stats?year=${year}`);
+    }
 }
 
 // ============================================================================

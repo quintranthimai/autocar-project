@@ -14,6 +14,13 @@
         <ul class="nav nav-tabs mb-4 border-bottom-0 gap-3">
             <li class="nav-item">
                 <a class="nav-link fw-bold border-0 px-1 pb-3"
+                    :class="activeTab === 'dashboard' ? 'active border-bottom border-primary border-3 text-primary bg-transparent' : 'text-muted'"
+                    @click.prevent="activeTab = 'dashboard'" href="#">
+                    <i class="fas fa-chart-pie me-1"></i> Tổng quan
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fw-bold border-0 px-1 pb-3"
                     :class="activeTab === 'cars' ? 'active border-bottom border-primary border-3 text-primary bg-transparent' : 'text-muted'"
                     @click.prevent="activeTab = 'cars'" href="#">
                     <i class="fas fa-car-side me-1"></i> Danh sách xe
@@ -52,6 +59,88 @@
                 </a>
             </li>
         </ul>
+
+        <!-- ========================================== -->
+        <!-- TAB TỔNG QUAN DOANH THU -->
+        <!-- ========================================== -->
+        <div v-if="activeTab === 'dashboard'">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">Thống kê hiệu quả cho thuê</h4>
+                <div class="d-flex gap-2">
+                    <select class="form-select form-select-sm" v-model="dashboardFilter.month" @change="fetchOwnerStats">
+                        <option v-for="m in 12" :key="m" :value="m">Tháng {{ m }}</option>
+                    </select>
+                    <select class="form-select form-select-sm" v-model="dashboardFilter.year" @change="fetchOwnerStats">
+                        <option :value="new Date().getFullYear()">Năm {{ new Date().getFullYear() }}</option>
+                        <option :value="new Date().getFullYear() - 1">Năm {{ new Date().getFullYear() - 1 }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div v-if="loadingStats" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+            
+            <div v-else>
+                <!-- KPI Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 bg-primary text-white">
+                            <div class="card-body p-4 text-center">
+                                <h6 class="opacity-75 mb-2">Tổng Doanh Thu (Hệ thống)</h6>
+                                <h3 class="fw-bold mb-0">{{ formatPrice(ownerStats.total_revenue) }}đ</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 bg-success text-white">
+                            <div class="card-body p-4 text-center">
+                                <h6 class="opacity-75 mb-2">Thu Nhập Thực Nhận (70%)</h6>
+                                <h3 class="fw-bold mb-0">{{ formatPrice(ownerStats.total_earning) }}đ</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 bg-warning text-dark">
+                            <div class="card-body p-4 text-center">
+                                <h6 class="opacity-75 mb-2">Tổng Chuyến Đi</h6>
+                                <h3 class="fw-bold mb-0">{{ ownerStats.total_trips }} <span class="fs-6 fw-normal">chuyến</span></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bảng chi tiết từng xe -->
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Hiệu suất theo từng xe</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0 text-center">
+                                <thead class="bg-light text-muted small text-uppercase">
+                                    <tr>
+                                        <th class="text-start">Tên Xe</th>
+                                        <th>Biển Số</th>
+                                        <th>Số Chuyến</th>
+                                        <th class="text-end">Doanh Thu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="car in ownerStats.vehicles_stats" :key="car.id">
+                                        <td class="text-start fw-bold text-primary">{{ car.vehicle_name }}</td>
+                                        <td><span class="badge bg-secondary">{{ car.license_plate }}</span></td>
+                                        <td>{{ car.trips_count }}</td>
+                                        <td class="text-end fw-bold text-success">{{ formatPrice(car.total_revenue) }}đ</td>
+                                    </tr>
+                                    <tr v-if="!ownerStats.vehicles_stats || ownerStats.vehicles_stats.length === 0">
+                                        <td colspan="4" class="text-center py-4 text-muted">Không có dữ liệu trong khoảng thời gian này.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- ========================================== -->
         <!-- TAB 1: DANH SÁCH XE CỦA TÔI -->
@@ -509,6 +598,35 @@ const activeTab = ref(route.query.tab || 'cars');
 // Danh sách xe của đối tác/chủ xe đang cho thuê trên hệ thống
 const myCars = ref([]);
 const loadingCars = ref(true);
+
+// ============================================================================
+// DASHBOARD TỔNG QUAN DOANH THU & HIỆU SUẤT CỦA CHỦ XE
+// ============================================================================
+const loadingStats = ref(true);
+const dashboardFilter = ref({
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear()
+});
+const ownerStats = ref({
+    total_revenue: 0,
+    total_earning: 0,
+    total_trips: 0,
+    vehicles_stats: []
+});
+
+const fetchOwnerStats = async () => {
+    loadingStats.value = true;
+    try {
+        const res = await vehicleService.getOwnerStats(dashboardFilter.value.year, dashboardFilter.value.month);
+        if (res.data && res.data.success) {
+            ownerStats.value = res.data.data;
+        }
+    } catch (e) {
+        console.error("Lỗi lấy dữ liệu thống kê:", e);
+    } finally {
+        loadingStats.value = false;
+    }
+};
 
 // Danh sách các yêu cầu thuê xe mới (Đang chờ chủ xe phê duyệt/từ chối)
 const requests = ref([]);
@@ -983,6 +1101,7 @@ onMounted(() => {
     fetchMyCars();
     fetchRequests();
     fetchOwnerTrips(); // Bổ sung hàm gọi API lịch trình chuyến đi
+    fetchOwnerStats(); // Tải báo cáo doanh thu
 
     // Khởi tạo bộ đếm nhịp giây phục vụ cho bộ đồng hồ Countdown 2 tiếng
     timerInterval = setInterval(() => {
