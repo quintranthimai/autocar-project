@@ -1,0 +1,16 @@
+name: Keep Render Backend Alive
+
+on:
+  schedule:
+    # Chạy mỗi 14 phút một lần
+    - cron: '*/14 * * * *'
+  workflow_dispatch: # Cho phép chạy thủ công
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend API
+        run: |
+          curl -s https://autocar-citx.onrender.com/api/v1/web/vehicles/form-options > /dev/null
+          echo "Pinged Backend successfully to prevent Cold Start"

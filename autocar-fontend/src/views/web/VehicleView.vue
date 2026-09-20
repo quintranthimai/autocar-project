@@ -192,11 +192,49 @@
                             </p>
                         </div>
 
-                        <!-- Trạng thái 1: Màn hình Đang Tải (Loading State) -->
-                        <div v-if="loading" class="text-center py-5">
-                            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                        <!-- Trạng thái 1: Màn hình Đang Tải (Loading State - Skeleton Loader) -->
+                        <div v-if="loading" class="row g-4">
+                            <div v-for="i in 6" :key="i" class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="card border-0 shadow-sm rounded-4 h-100 bg-white" aria-hidden="true">
+                                    <div class="position-relative">
+                                        <div class="placeholder-glow">
+                                            <div class="placeholder col-12 rounded-top-4" style="height: 220px; background-color: #e9ecef;"></div>
+                                        </div>
+                                        
+                                        <div class="position-absolute start-0 ms-3" style="bottom: -20px; z-index: 2;">
+                                            <div class="placeholder-glow">
+                                                <div class="placeholder rounded-circle border border-white border-3" style="width: 55px; height: 55px; background-color: #dee2e6;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body pt-4 mt-2 d-flex flex-column px-3 pb-3">
+                                        <div class="placeholder-glow mb-3 d-flex gap-2">
+                                            <span class="placeholder col-4 rounded-pill" style="height: 24px; background-color: #e9ecef;"></span>
+                                            <span class="placeholder col-5 rounded-pill" style="height: 24px; background-color: #e9ecef;"></span>
+                                        </div>
+                                        
+                                        <h5 class="card-title placeholder-glow mb-3">
+                                            <span class="placeholder col-8 rounded" style="background-color: #e9ecef;"></span>
+                                        </h5>
+
+                                        <div class="placeholder-glow d-flex gap-3 mb-4">
+                                            <span class="placeholder col-3 rounded" style="background-color: #e9ecef;"></span>
+                                            <span class="placeholder col-3 rounded" style="background-color: #e9ecef;"></span>
+                                            <span class="placeholder col-3 rounded" style="background-color: #e9ecef;"></span>
+                                        </div>
+
+                                        <div class="mt-auto border-top pt-3 d-flex justify-content-between align-items-end placeholder-glow">
+                                            <div class="col-4">
+                                                <span class="placeholder col-12 rounded" style="background-color: #e9ecef;"></span>
+                                            </div>
+                                            <div class="col-3">
+                                                <span class="placeholder col-12 rounded" style="height: 28px; background-color: #e9ecef;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="mt-3 text-muted fw-bold">Hệ thống đang tìm kiếm xe...</p>
                         </div>
 
                         <!-- Trạng thái 2: Màn hình Trống rỗng khi không có xe phù hợp (Empty State) -->

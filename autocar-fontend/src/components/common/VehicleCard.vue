@@ -7,6 +7,7 @@
                      class="card-img-top object-fit-cover"
                      style="height: 220px;"
                      alt="Car Image" 
+                     loading="lazy"
                      onerror="this.onerror=null; this.src='https://placehold.co/600x400/eeeeee/999999?text=No+Image'">
 
                 <div class="position-absolute top-0 end-0 m-3" style="z-index: 10;">
