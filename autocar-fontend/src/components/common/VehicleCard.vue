@@ -3,11 +3,11 @@
         <div class="card border-0 shadow-sm rounded-4 h-100 bg-white">
             <div class="position-relative">
                 <!-- ĐIỂM CHÚ Ý: Đã thêm style="height: 220px;" để cố định khung ảnh -->
-                <img :src="car?.images?.[0]?.image_url || '/placeholder-car.png'" 
+                <img :src="car?.images?.[0]?.image_url || 'https://placehold.co/600x400/eeeeee/999999?text=No+Image'" 
                      class="card-img-top object-fit-cover"
                      style="height: 220px;"
                      alt="Car Image" 
-                     onerror="this.src='/placeholder-car.png'">
+                     onerror="this.src='https://placehold.co/600x400/eeeeee/999999?text=No+Image'">
 
                 <div class="position-absolute top-0 end-0 m-3" style="z-index: 10;">
                     <div @click.stop.prevent="handleToggleFavorite"

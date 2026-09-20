@@ -55,7 +55,7 @@
                                 <div class="col-md-3">
                                     <img :src="getVehicleImage(booking.vehicle)" class="rounded-3 object-fit-cover"
                                         style="width: 120px; height: 80px;" alt="Car Image"
-                                        onerror="this.src='/placeholder-car.png'">
+                                        onerror="this.src='https://placehold.co/600x400/eeeeee/999999?text=No+Image'">
                                 </div>
                                 <div class="col-md-9">
                                     <h4 class="fw-bold text-dark text-uppercase mb-1">
@@ -265,7 +265,7 @@ const getVehicleImage = (vehicle) => {
     if (vehicle && vehicle.images && vehicle.images.length > 0) {
         return vehicle.images[0].image_url;
     }
-    return '/placeholder-car.png';
+    return 'https://placehold.co/600x400/eeeeee/999999?text=No+Image';
 };
 
 /**
