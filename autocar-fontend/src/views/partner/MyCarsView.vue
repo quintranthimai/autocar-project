@@ -176,7 +176,7 @@
                 <div class="col-md-6 col-lg-4" v-for="car in myCars" :key="car.id">
                     <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
                         <div class="position-relative">
-                            <img :src="getThumbnail(car)" class="card-img-top object-fit-cover" style="height: 220px;" alt="Car Image" onerror="this.src='https://placehold.co/600x400/eeeeee/999999?text=No+Image'">
+                            <img :src="getThumbnail(car)" class="card-img-top object-fit-cover" style="height: 220px;" alt="Car Image" onerror="this.onerror=null; this.src='https://placehold.co/600x400/eeeeee/999999?text=No+Image'">
                             <div class="position-absolute top-0 end-0 p-3">
                                 <span class="badge shadow-sm rounded-pill px-3 py-2" :class="getStatusInfo(car.status).class">
                                     <i :class="getStatusInfo(car.status).icon" class="me-1"></i> {{ getStatusInfo(car.status).text }}

@@ -7,7 +7,7 @@
                      class="card-img-top object-fit-cover"
                      style="height: 220px;"
                      alt="Car Image" 
-                     onerror="this.src='https://placehold.co/600x400/eeeeee/999999?text=No+Image'">
+                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/eeeeee/999999?text=No+Image'">
 
                 <div class="position-absolute top-0 end-0 m-3" style="z-index: 10;">
                     <div @click.stop.prevent="handleToggleFavorite"
@@ -32,7 +32,7 @@
                         <img :src="car.owner?.avatar || '/img/team-1.jpg'"
                             class="rounded-circle border-3 border-white object-fit-cover shadow-sm bg-white"
                             style="width: 55px; height: 55px;" alt="Avatar"
-                            onerror="this.src='https://ui-avatars.com/api/?name=User&background=random'">
+                            onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=User&background=random'">
 
                         <div v-if="(car.owner && car.owner.avg_rating >= 4.8) || car.is_super_host"
                             class="position-absolute bottom-0 start-50 translate-middle-x rounded-circle bg-warning d-flex align-items-center justify-content-center border-2 border-white"
